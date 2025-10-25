@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-container">
+                <img src="icons/icon48.png" alt="Domain Details" class="logo">
+                <h1>Domain Details</h1>
+            </div>
+            <span class="beta-badge">RDAP</span>
+        </div>
+
+        <!-- Domain Info Section -->
+        <div class="domain-section">
+            <div class="current-domain">
+                <span class="label">Current Domain</span>
+                <div class="domain-display" id="domain">Loading...</div>
+            </div>
+            
+            <button id="lookup-btn" class="btn-primary">
+                <span class="btn-text">Refresh Domain Info</span>
+                <span class="btn-loading" style="display: none;">
+                    <svg class="spinner" width="16" height="16" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="60" stroke-dashoffset="15" stroke-linecap="round">
+                            <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                    Looking up...
+                </span>
+            </button>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-container" style="display: none;">
+            <div class="tabs">
+                <button class="tab active" data-tab="info">Information</button>
+                <button class="tab" data-tab="raw">Raw Data</button>
+            </div>
+
+            <div id="info-tab" class="tab-content active">
+                <div id="result" class="result-content"></div>
+            </div>
+
+            <div id="raw-tab" class="tab-content" style="display: none;">
+                <div id="raw-data" class="raw-content"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <a href="https://domaindetails.com" target="_blank" class="footer-link" id="footer-link">
+                View & Track More Data
+            </a>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
