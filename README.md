@@ -179,6 +179,54 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 - Support for 1,500+ TLDs
 - Performance optimizations
 
+## Releasing New Versions
+
+### For Maintainers
+
+We use an automated release process. Here's how to publish a new version:
+
+#### Option 1: Automated Release (Recommended)
+
+```bash
+# 1. Update version in manifest.json
+# Edit manifest.json and change "version": "1.3.0"
+
+# 2. Update CHANGELOG.md
+# Add a new version section at the top
+
+# 3. Commit changes
+git add manifest.json CHANGELOG.md
+git commit -m "chore: Bump version to 1.3.0"
+git push origin main
+
+# 4. Create and push tag
+git tag -a v1.3.0 -m "Release v1.3.0"
+git push origin v1.3.0
+
+# 🎉 GitHub Action automatically creates the release!
+```
+
+The GitHub Action will:
+- Build the extension ZIP file
+- Extract changelog for the release notes
+- Create a GitHub Release
+- Upload the ZIP as a release asset
+
+#### Option 2: Manual Release
+
+```bash
+# 1. Build the extension
+./build.sh
+
+# 2. Create and push tag
+git tag -a v1.3.0 -m "Release v1.3.0"
+git push origin v1.3.0
+
+# 3. Go to GitHub Releases page and upload the ZIP manually
+```
+
+**Note**: Regular pushes to `main` do NOT trigger releases. Only pushing version tags (e.g., `v1.3.0`) creates releases.
+
 ## Contributing
 
 Contributions are welcome! Here's how you can help:
@@ -193,6 +241,8 @@ Contributions are welcome! Here's how you can help:
 - Test thoroughly before submitting
 - Update CHANGELOG.md for new features
 - Keep commits focused and descriptive
+
+For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Support
 
