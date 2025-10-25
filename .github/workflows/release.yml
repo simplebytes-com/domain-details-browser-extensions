@@ -1,0 +1,67 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Triggers on tags like v1.2.0, v1.2.1, etc.
+
+permissions:
+  contents: write  # Required for creating releases
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Build extension
+        run: |
+          zip -r domain-details-extension-v${{ steps.get_version.outputs.VERSION }}.zip \
+            manifest.json \
+            popup.html \
+            popup.css \
+            popup.js \
+            icons/ \
+            -x "*.DS_Store" \
+            -x "__MACOSX/*" \
+            -x "*.git*"
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          # Extract the changelog section for this version
+          VERSION="${{ steps.get_version.outputs.VERSION }}"
+          CHANGELOG=$(sed -n "/## Version $VERSION/,/^## Version/p" CHANGELOG.md | sed '$ d')
+
+          # If empty, use a default message
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG="See [CHANGELOG.md](CHANGELOG.md) for details."
+          fi
+
+          # Save to output (escape for GitHub Actions)
+          echo "CONTENT<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Release v${{ steps.get_version.outputs.VERSION }}"
+          body: ${{ steps.changelog.outputs.CONTENT }}
+          files: domain-details-extension-v${{ steps.get_version.outputs.VERSION }}.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release summary
+        run: |
+          echo "✅ Release v${{ steps.get_version.outputs.VERSION }} created successfully!"
+          echo "📦 Extension package uploaded"
+          echo "🔗 View release: https://github.com/${{ github.repository }}/releases/tag/v${{ steps.get_version.outputs.VERSION }}"
