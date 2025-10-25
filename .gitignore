@@ -38,3 +38,6 @@ yarn-error.log*
 node_modules/
 package-lock.json
 yarn.lock
+
+# Project documentation (for AI assistants)
+CLAUDE.md
